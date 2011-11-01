@@ -1,0 +1,38 @@
+* Multimethods for Python
+This module provides support for clojure-style multimethods in Python. A
+multimethod can switch implementations based on the result of an arbitrary
+function of the method's arguments.
+
+There are many projects like this; this one is mine.
+
+* Usage
+First import the module.
+: import py-multimethod as mm
+
+Since multimethods need a function of the method's arguments, the multimethod
+must be declared before methods can be defined.
+
+: mm.multimethod('sum', lambda lst: len(lst) > 0)
+
+=multimethod= also has an optional parameter =strict=, which, if true, will
+cause an exception to be raised when a method is defined that would override a
+previous method definition.
+
+The =defmethod= decorator can then be used to define individual methods. The
+decorator takes the value to be matched against the result of the function of
+the method's arguments.
+
+: @mm.defmethod(False)
+: def sum(lst):
+:     return 0
+: 
+: @mm.defmethod(True)
+: def sum(lst):
+:     return lst[0] + sum(lst[1:])
+
+* Installation
+Just clone the repository,
+
+: git clone git://github.com/mtstickney/py-multimethod.git
+
+add the module to Python's load path, and =import py-multimethod=.
